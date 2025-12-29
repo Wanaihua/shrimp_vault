@@ -10,18 +10,33 @@ Language Model".
 
 # 以下方法采用G-LLaVA-7B模型
 
-## 先电脑下载Node.js以及Git.
-## 再到电脑项目保存路径文件夹右键git bash here,输入
+## 后续项目保存路径为：/home/lj/wanaihua/，可根据自行修改。
+
+
+## cd到项目保存路径文件夹输入
 ```
+cd /home/lj/wanaihua/
 git clone https://github.com/pipilurj/G-LLaVA.git
 ```
-## 安装项目依赖
+
+## 创建conda环境，安装项目依赖（conda默认已安装）
 ```
 cd G-LLaVA
 conda create -n gllava python=3.10 -y
 conda activate gllava
 pip install -e .
 pip install deepspeed
+```
+
+## 
+
+## 视觉编码器安装(修改modelscope缓存地址，安装在playground/data 下)
+```
+pip install modelscope
+
+export MODELSCOPE_CACHE=/home/lj/wanaihua/G-LLaVA/playground/data
+
+modelscope download --model openai-mirror/clip-vit-large-patch14-336
 ```
 
 ## 训练数据集准备
@@ -42,10 +57,6 @@ playground/data/
 ├── test_answers.jsonl
 ```
 
-## 视觉编码器安装
-```
-
-```
 
 ## 修改运行脚本run_alignment.sh
 ```
