@@ -28,17 +28,16 @@ pip install -e .
 pip install deepspeed
 ```
 
-## LLaVa-7B模型下载
+## LLaVa-7B模型下载(修改modelscope缓存地址，安装在playground/data 下)
 ```
-
-```
-
-## 视觉编码器安装(修改modelscope缓存地址，安装在playground/data 下)
-```
-pip install modelscope
+pip install modelscope -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 export MODELSCOPE_CACHE=/home/lj/wanaihua/G-LLaVA/playground/data
 
+modelscope download --model huangjianuo/llava-v1.5-7b
+```
+## 视觉编码器安装
+```
 modelscope download --model openai-mirror/clip-vit-large-patch14-336
 ```
 
