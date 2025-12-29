@@ -152,32 +152,32 @@ deepspeed --include=localhost:0,1 gllava/train/train.py \
                                             --freeze_backbone
 ```
 
-## 第一步对齐训练
+## 第一步对齐
 This stage enables the model to better interpret the content of geometric figures.
 ```
 bash scripts/run_alignment.sh
 ```
 
-## 对齐训练方法运行顺序
+## 对齐方法运行顺序
 ```
 train.py->llava_arch.py(initialize_vision_modules)视觉编码器模型侧启动->
 train.py(make_supervised_data_module)数据侧预处理->
 train.py(LazySupervisedDataset)提供 “图像 + 文本” 对齐的单样本数据->
 train.py(DataCollatorForSupervisedDataset)解决数据维度对齐与效率优化问题->
-LLaVATrainer(驱动模型前向)->   
+LLaVATrainer(驱动模型前向)->llava_llama.py(forward)->   
 llava_arch.py(prepare_inputs_labels_for_multimodal)图像特征与文本嵌入的对齐与拼接。->
-llava_llama.py(forward)
+得到outputs，接着过lm_head计算logits与可选的loss.
 ```
 
-## 第二步微调训练
+## 第二步微调(流程与对齐一致，采取训练数据集不一致)
 This stage equips the model with stronger ability for solving geometry problems.
 
 ```
 bash scripts/run_qa.sh
 ```
 
-## 附件
-### 切入测试文件test_inputs_embeds.py,放在scripts文件夹下
+## 附件（测试inputs_embeds对模型输出的影响）
+### 可切入测试文件test_inputs_embeds.py,放在scripts文件夹下
 
 ```
 import argparse
