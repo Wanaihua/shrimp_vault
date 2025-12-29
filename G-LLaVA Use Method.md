@@ -56,7 +56,8 @@ bash scripts/run_qa.sh
 ```
 
 ## 附件
-### 切入测试文件test_inputs_embeds.py
+### 切入测试文件test_inputs_embeds.py,放在scripts文件夹下
+
 ```
 import argparse
 
