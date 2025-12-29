@@ -10,7 +10,7 @@ Language Model".
 
 # 以下方法采用G-LLaVA-7B模型
 
-## 
+## 先电脑下载Node.js以及Git，到电脑项目保存路径文件夹
 ## Install Packages
 ```
 cd G-LLaVA
