@@ -44,7 +44,7 @@ modelscope download --model openai-mirror/clip-vit-large-patch14-336
 
 ## 训练数据集准备
 
-Download our [dataset](https://huggingface.co/datasets/Luckyjhg/Geo170K/tree/main).()
+Download our [dataset](https://huggingface.co/datasets/Luckyjhg/Geo170K/tree/main).(此处需要挂vpn连接huggingface下载)
 
 Place the data under playground/data.
 Here is the data structure:
