@@ -42,6 +42,11 @@ playground/data/
 ├── test_answers.jsonl
 ```
 
+## 修改运行脚本run_alignment.sh
+```
+
+```
+
 ## 第一步对齐训练
 This stage enables the model to better interpret the content of geometric figures.
 ```
@@ -284,4 +289,8 @@ def main():
 if __name__ == "__main__":
 
     main()
+```
+## 启动指令
+```
+python3 scripts/test_inputs_embeds.py --seq-lens 32,64 --batch-size 2 --device cuda:0 --data-parallel --devices 0,1
 ```
