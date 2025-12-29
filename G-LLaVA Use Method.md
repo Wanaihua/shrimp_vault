@@ -8,8 +8,9 @@ Language Model".
 [Paper](https://arxiv.org/pdf/2312.11370.pdf), [Dataset](https://huggingface.co/datasets/Luckyjhg/Geo170K/tree/main) , Models([G-LLaVA-7B](https://huggingface.co/renjiepi/G-LLaVA-7B), [G-LLaVA-13B](https://huggingface.co/renjiepi/G-LLaVA-13B))
 
 
-以下方法采用G-LLaVA-7B模型
+# 以下方法采用G-LLaVA-7B模型
 
+## 
 ## Install Packages
 ```
 cd G-LLaVA
