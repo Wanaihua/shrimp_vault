@@ -36,7 +36,7 @@ export MODELSCOPE_CACHE=/home/lj/wanaihua/G-LLaVA/playground/data
 
 modelscope download --model huangjianuo/llava-v1.5-7b
 ```
-## 视觉编码器安装
+## 视觉编码器安装(export仅在当前终端窗口有效，重新打开终端需重新设置缓存地址)
 ```
 modelscope download --model openai-mirror/clip-vit-large-patch14-336
 ```
