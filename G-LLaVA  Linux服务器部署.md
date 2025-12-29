@@ -181,229 +181,120 @@ bash scripts/run_qa.sh
 
 ```
 import argparse
-
 import os
-
 import torch
 
-  
-
 from transformers import AutoConfig, AutoModelForCausalLM
-
 from gllava.model.language_model.llava_llama import LlavaLlamaForCausalLM
-
-  
-  
 
 def main():
 
     parser = argparse.ArgumentParser()
-
     parser.add_argument("--model-path", type=str, default="/home/lj/wanaihua/G-LLaVA/playground/data/models/huangjianuo/llava-v1.5-7b")
-
     parser.add_argument("--device", type=str, default="cuda:0")
-
     parser.add_argument("--devices", type=str, default="0,1", help="Comma-separated CUDA device indices for DataParallel")
-
     parser.add_argument("--data-parallel", action="store_true", help="Use nn.DataParallel across specified devices")
-
     parser.add_argument("--batch-size", type=int, default=1)
-
     parser.add_argument("--seq-lens", type=str, default="64,128,256")
-
     args = parser.parse_args()
 
-  
-
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
-
     os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
-
-  
-
+    
     dev_arg = args.device
-
     if torch.cuda.is_available() and "cuda" in dev_arg:
-
         if "," in dev_arg or "，" in dev_arg:
-
             dev_arg = dev_arg.split(",")[0].split("，")[0]
-
         if ":" in dev_arg:
-
             try:
-
                 _ = int(dev_arg.split(":")[1])
-
                 device = torch.device(dev_arg)
-
             except Exception:
-
                 device = torch.device("cuda")
-
         else:
-
             device = torch.device("cuda")
-
     else:
-
         device = torch.device("cpu")
-
-  
-
     print(f"Loading model from {args.model_path} ...")
 
     cfg = None
-
     model_type = None
-
+    
     try:
-
         cfg = AutoConfig.from_pretrained(args.model_path, trust_remote_code=True, local_files_only=True)
-
         model_type = getattr(cfg, "model_type", None)
-
     except Exception as e:
-
         print(f"Warn: AutoConfig load failed: {e}. Will attempt model load directly.")
 
-  
-
     # Load model according to type
-
     if model_type == "llava" or model_type == "llama":
-
         vision_tower_path = "/home/lj/wanaihua/G-LLaVA/playground/data/models/openai-mirror/clip-vit-large-patch14-336"
-
         setattr(cfg, "mm_vision_tower", vision_tower_path)
-
         setattr(cfg, "mm_vision_select_layer", -2)
-
         setattr(cfg, "mm_use_im_start_end", False)
-
         setattr(cfg, "mm_use_im_patch_token", False)
-
         model = LlavaLlamaForCausalLM.from_pretrained(args.model_path, torch_dtype=torch.bfloat16, config=cfg).to(device)
-
         llava_mode = True
-
     else:
-
         model = AutoModelForCausalLM.from_pretrained(
-
             args.model_path,
-
             torch_dtype=torch.bfloat16,
-
             trust_remote_code=True,
-
             local_files_only=True,
-
         ).to(device)
-
         llava_mode = False
-
     model.eval()
-
-  
 
     dp_ids = None
 
     if args.data_parallel and torch.cuda.is_available():
-
         devs = [d.strip() for d in args.devices.replace("，", ",").split(",") if d.strip()]
-
         try:
-
             dp_ids = [int(d) for d in devs]
-
         except Exception:
-
             dp_ids = [0, 1]
-
         print(f"Using DataParallel on devices: {dp_ids}")
 
-  
-
     if llava_mode:
-
         base = model.get_model()
-
         if args.data_parallel and torch.cuda.is_available():
-
             base = torch.nn.DataParallel(base, device_ids=dp_ids)
-
     else:
-
         base = model
-
     hidden_size = (model.module.config.hidden_size if isinstance(model, torch.nn.DataParallel) else getattr(model.config, "hidden_size", None))
 
     if hidden_size is None:
-
         try:
-
             hidden_size = model.get_input_embeddings().embedding_dim
-
         except Exception:
-
             raise RuntimeError("Unable to determine hidden_size from model config or embeddings.")
-
     dtype = next(model.parameters()).dtype
-
-  
-
     seq_lens = [int(x) for x in args.seq_lens.split(",")]
-
     for L in seq_lens:
-
         B = args.batch_size
-
         print(f"\nTesting inputs_embeds with shape (B={B}, L={L}, H={hidden_size})")
-
         inputs_embeds = torch.randn(B, L, hidden_size, dtype=dtype, device=device)
-
         attention_mask = torch.ones(B, L, dtype=torch.long, device=device)
 
-  
-
         with torch.no_grad():
-
             outputs = base(
-
                 input_ids=None,
-
                 attention_mask=attention_mask,
-
                 past_key_values=None,
-
                 inputs_embeds=inputs_embeds,
-
                 use_cache=False,
-
                 output_attentions=False,
-
                 output_hidden_states=False,
-
                 return_dict=True,
-
             )
-
         print(f"last_hidden_state: {tuple(outputs.last_hidden_state.shape)}")
-
+        
         if hasattr(outputs, "past_key_values") and outputs.past_key_values is not None:
-
             k, v = outputs.past_key_values[0]
-
             print(f"past_key_values[0][0] (key): {tuple(k.shape)}")
-
-            print(f"past_key_values[0][1] (value): {tuple(v.shape)}")
-
+            print(f"past_key_values[0][1] (value): {tuple(v.shape)}"
   
-  
-
 if __name__ == "__main__":
-
     main()
 ```
 ## 启动指令
