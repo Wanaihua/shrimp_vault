@@ -61,14 +61,14 @@ VISION_TOWER="${VISION_TOWER_PATH:-/home/lj/wanaihua/G-LLaVA/playground/data/mod
 export VISION_TOWER_PATH="$VISION_TOWER"
 
   
-
+# 0,1 代表双卡运行，多卡为0,1,2，...
 deepspeed --include=localhost:0,1 gllava/train/train.py \
 
                                             --mm_projector_lr 1e-5 \
 
                                             --deepspeed ./scripts/zero3.json \
 
-                                            --model_name_or_path 大模型路径 \
+                                            --model_name_or_path llava-v1.5-7b本地路径 \
 
                                             --version v1 \
 
