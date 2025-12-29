@@ -42,6 +42,11 @@ playground/data/
 ├── test_answers.jsonl
 ```
 
+## 视觉编码器安装
+```
+
+```
+
 ## 修改运行脚本run_alignment.sh
 ```
 # Enable offline mode to prevent any network calls.
