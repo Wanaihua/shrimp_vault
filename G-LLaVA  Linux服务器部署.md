@@ -28,7 +28,10 @@ pip install -e .
 pip install deepspeed
 ```
 
-## 
+## LLaVa-7B模型下载
+```
+
+```
 
 ## 视觉编码器安装(修改modelscope缓存地址，安装在playground/data 下)
 ```
