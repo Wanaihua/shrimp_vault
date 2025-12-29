@@ -44,7 +44,93 @@ playground/data/
 
 ## 修改运行脚本run_alignment.sh
 ```
+# Enable offline mode to prevent any network calls.
 
+export HF_HUB_OFFLINE=1
+
+export TRANSFORMERS_OFFLINE=1
+
+  
+
+# Allow overriding vision tower via env var `VISION_TOWER_PATH`.
+
+# Default to your local CLIP directory.
+
+VISION_TOWER="${VISION_TOWER_PATH:-/home/lj/wanaihua/G-LLaVA/playground/data/models/openai-mirror/clip-vit-large-patch14-336}"
+
+export VISION_TOWER_PATH="$VISION_TOWER"
+
+  
+
+deepspeed --include=localhost:0,1 gllava/train/train.py \
+
+                                            --mm_projector_lr 1e-5 \
+
+                                            --deepspeed ./scripts/zero3.json \
+
+                                            --model_name_or_path 大模型路径 \
+
+                                            --version v1 \
+
+                                            --data_path ./playground/data/alignment.json \
+
+                                            --image_folder playground/data/images \
+
+                                            --vision_tower "${VISION_TOWER}" \
+
+                                            --mm_projector_type mlp2x_gelu \
+
+                                            --mm_vision_select_layer -2 \
+
+                                            --mm_use_im_start_end False \
+
+                                            --mm_use_im_patch_token False \
+
+                                            --image_aspect_ratio pad \
+
+                                            --group_by_modality_length True \
+
+                                            --bf16 True \
+
+                                            --output_dir ./checkpoints/llava1.5_7b_with_alignment \
+
+                                            --num_train_epochs 2 \
+
+                                            --per_device_train_batch_size 6 \
+
+                                            --per_device_eval_batch_size 4 \
+
+                                            --gradient_accumulation_steps 1 \
+
+                                            --evaluation_strategy "no" \
+
+                                            --save_strategy "steps" \
+
+                                            --save_steps 50000 \
+
+                                            --save_total_limit 1 \
+
+                                            --learning_rate 1e-5 \
+
+                                            --weight_decay 0. \
+
+                                            --warmup_ratio 0.03 \
+
+                                            --lr_scheduler_type "cosine" \
+
+                                            --logging_steps 1 \
+
+                                            --tf32 True \
+
+                                            --model_max_length 2048 \
+
+                                            --gradient_checkpointing True \
+
+                                            --dataloader_num_workers 4 \
+
+                                            --lazy_preprocess True \
+
+                                            --freeze_backbone
 ```
 
 ## 第一步对齐训练
