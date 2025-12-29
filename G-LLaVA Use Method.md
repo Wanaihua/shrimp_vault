@@ -24,9 +24,8 @@ pip install -e .
 pip install deepspeed
 ```
 
-## Data Preparation
+## 训练数据集准备
 
-[comment]: <> (Download the COCO dataset from [huggingface] &#40;To be published&#41;.)
 Download our [dataset](https://huggingface.co/datasets/Luckyjhg/Geo170K/tree/main).
 
 Place the data under playground/data.
@@ -42,7 +41,6 @@ playground/data/
 ├── test_question.jsonl
 ├── test_answers.jsonl
 ```
-"test_question.jsonl" and "test_answers.jsonl" correspond to the test set of GeoQA. 
 
 ## First Stage Alignment
 This stage enables the model to better interpret the content of geometric figures.
