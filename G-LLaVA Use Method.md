@@ -10,18 +10,17 @@ Language Model".
 
 # 以下方法采用G-LLaVA-7B模型
 
-## 先电脑下载Node.js以及Git，到电脑项目保存路径文件夹右键git bash here,输入
-```git clone https://github.com/pipilurj/G-LLaVA.git
+## 先电脑下载Node.js以及Git.
+## 再到电脑项目保存路径文件夹右键git bash here,输入
 ```
-## Install Packages
+git clone https://github.com/pipilurj/G-LLaVA.git
+```
+## 安装项目依赖
 ```
 cd G-LLaVA
 conda create -n gllava python=3.10 -y
 conda activate gllava
 pip install -e .
-```
-## Enable Deepspeed
-```
 pip install deepspeed
 ```
 
