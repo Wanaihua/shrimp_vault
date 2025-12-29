@@ -75,7 +75,7 @@ export TRANSFORMERS_OFFLINE=1
 
 # Default to your local CLIP directory.
 
-VISION_TOWER="${VISION_TOWER_PATH:-/home/lj/wanaihua/G-LLaVA/playground/data/models/openai-mirror/clip-vit-large-patch14-336}"
+VISION_TOWER="${VISION_TOWER_PATH:-本地vit路径}"
 
 export VISION_TOWER_PATH="$VISION_TOWER"
 
@@ -156,6 +156,16 @@ deepspeed --include=localhost:0,1 gllava/train/train.py \
 This stage enables the model to better interpret the content of geometric figures.
 ```
 bash scripts/run_alignment.sh
+```
+
+## 对齐训练方法运行顺序
+```
+train.py->llava_arch.py(initialize_vision_modules)视觉编码器模型侧启动->
+train.py(make_supervised_data_module)数据侧预处理->
+train.py(LazySupervisedDataset)提供 “图像 + 文本” 对齐的单样本数据->
+train.py(DataCollatorForSupervisedDataset)解决数据维度对齐与效率优化问题->
+LLaVATrainer(驱动模型前向)->   
+llava_arch.py(prepare_inputs_labels_for_multimodal)完成图像特征与文本嵌入的对齐与拼接。
 ```
 
 ## 第二步微调训练
